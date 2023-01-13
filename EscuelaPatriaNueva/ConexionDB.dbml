@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="EscuelaPatriaNueva" Class="ConexionDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-MLPJ0UT\SQLEXPRESS;Initial Catalog=EscuelaPatriaNueva;Integrated Security=True" SettingsObjectName="EscuelaPatriaNueva.Properties.Settings" SettingsPropertyName="EscuelaPatriaNuevaConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Curso" Member="Curso">
+    <Type Name="Curso">
+      <Column Name="IdCurso" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdDocente" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Descripcion" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Association Name="Curso_MatriculaCurso" Member="MatriculaCurso" ThisKey="IdCurso" OtherKey="IdCurso" Type="MatriculaCurso" />
+      <Association Name="Docente_Curso" Member="Docente" ThisKey="IdDocente" OtherKey="IdDocente" Type="Docente" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Docente" Member="Docente">
+    <Type Name="Docente">
+      <Column Name="IdDocente" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdPersona" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Docente_Curso" Member="Curso" ThisKey="IdDocente" OtherKey="IdDocente" Type="Curso" />
+      <Association Name="Persona_Docente" Member="Persona" ThisKey="IdPersona" OtherKey="Id" Type="Persona" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Estudiante" Member="Estudiante">
+    <Type Name="Estudiante">
+      <Column Name="IdEstudiante" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdPersona" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMatricula" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Matricula_Estudiante" Member="Matricula" ThisKey="IdMatricula" OtherKey="IdMatricula" Type="Matricula" IsForeignKey="true" />
+      <Association Name="Persona_Estudiante" Member="Persona" ThisKey="IdPersona" OtherKey="Id" Type="Persona" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Matricula" Member="Matricula">
+    <Type Name="Matricula">
+      <Column Name="IdMatricula" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Fecha" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdRepresentante" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Matricula_Estudiante" Member="Estudiante" ThisKey="IdMatricula" OtherKey="IdMatricula" Type="Estudiante" />
+      <Association Name="Matricula_MatriculaCurso" Member="MatriculaCurso" ThisKey="IdMatricula" OtherKey="IdMatricula" Type="MatriculaCurso" />
+      <Association Name="Persona_Matricula" Member="Persona" ThisKey="IdRepresentante" OtherKey="Id" Type="Persona" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MatriculaCurso" Member="MatriculaCurso">
+    <Type Name="MatriculaCurso">
+      <Column Name="IdMatricula" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCurso" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Curso_MatriculaCurso" Member="Curso" ThisKey="IdCurso" OtherKey="IdCurso" Type="Curso" IsForeignKey="true" />
+      <Association Name="Matricula_MatriculaCurso" Member="Matricula" ThisKey="IdMatricula" OtherKey="IdMatricula" Type="Matricula" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Persona" Member="Persona">
+    <Type Name="Persona">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Cedula" Type="System.String" DbType="VarChar(13) NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Apellido" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Telefono" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Direccion" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="FechaNacimiento" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Persona_Docente" Member="Docente" ThisKey="Id" OtherKey="IdPersona" Type="Docente" />
+      <Association Name="Persona_Estudiante" Member="Estudiante" ThisKey="Id" OtherKey="IdPersona" Type="Estudiante" />
+      <Association Name="Persona_Matricula" Member="Matricula" ThisKey="Id" OtherKey="IdRepresentante" Type="Matricula" />
+      <Association Name="Persona_Usuario" Member="Usuario" ThisKey="Id" OtherKey="IdPersona" Type="Usuario" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Usuario" Member="Usuario">
+    <Type Name="Usuario">
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NombreUsuario" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Contrasena" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="IdPersona" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Persona_Usuario" Member="Persona" ThisKey="IdPersona" OtherKey="Id" Type="Persona" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.SP_Listar_Usuarios" Method="SP_Listar_Usuarios">
+    <ElementType Name="SP_Listar_UsuariosResult">
+      <Column Name="IdUsuario" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NombreUsuario" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Contrasena" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="IdPersona" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_Insert_Usuario" Method="SP_Insert_Usuario">
+    <Parameter Name="cedula" Type="System.String" DbType="VarChar(13)" />
+    <Parameter Name="nombre" Type="System.String" DbType="VarChar(200)" />
+    <Parameter Name="apellido" Type="System.String" DbType="VarChar(200)" />
+    <Parameter Name="telefono" Type="System.String" DbType="VarChar(15)" />
+    <Parameter Name="direccion" Type="System.String" DbType="VarChar(200)" />
+    <Parameter Name="fecha_nacimiento" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="usuario" Type="System.String" DbType="VarChar(25)" />
+    <Parameter Name="contrasena" Type="System.String" DbType="VarChar(10)" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>
